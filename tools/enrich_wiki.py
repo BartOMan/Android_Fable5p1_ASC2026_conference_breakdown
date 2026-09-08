@@ -3,7 +3,7 @@
 import json,urllib.request,urllib.parse,time,sys,os,re,base64,io
 S=os.environ.get('ASC_SCRATCH','/tmp/claude-0/-home-user-Android-Fable5p1-ASC2026-conference-breakdown/22e803a5-16ae-5ba4-91b7-cbd9a897b501/scratchpad')
 d=json.load(open(S+'/build/data.json'))
-cx=json.load(open(S+'/build/enrich_crossref.json')) if os.path.exists(S+'/build/enrich_crossref.json') else {}
+cx=json.load(open(S+'/build/enrich_crossref_exact.json')) if os.path.exists(S+'/build/enrich_crossref_exact.json') else {}
 out_path=S+'/build/enrich_wiki.json'
 out=json.load(open(out_path)) if os.path.exists(out_path) else {}
 def score(p): return cx.get(p['key'],{}).get('n',0)*2+len(p['pres'])+(50 if p.get('plenary') else 0)+(5 if p.get('chairs') else 0)

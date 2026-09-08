@@ -73,7 +73,7 @@ INST_ALIASES=[
  (r'^(KEK|High Energy Accelerator Research Organization.*|KEK, High Energy Accelerator Research Organization)$','KEK'),
  (r'^(NIST|National Institute of Standards and Technology.*)$','NIST'),
  (r'^(MIT|Massachusetts Institute of Technology)$','Massachusetts Institute of Technology'),
- (r'^(LBNL|Lawrence Berk(e)?ley National Lab(oratory)?.*)$','Lawrence Berkeley National Laboratory'),
+ (r'^(LBNL|Law(e)?rence Berk(e)?ley National Lab(oratory)?.*|Berkeley Lab|E\\. ?O\\. Lawrence Berkeley National Laboratory)$','Lawrence Berkeley National Laboratory'),
  (r'^(National Institute of Standards and Te\w+|NIST.*)$','NIST'),
  (r'^(University of Colorado( at)?( Boulder)?|CU Boulder)$','University of Colorado Boulder'),
  (r'^(Institute of Electrical Engineering(, CAS)?|IEE CAS|IEECAS)$','Institute of Electrical Engineering, CAS'),

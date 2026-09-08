@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Merge enrichment (Crossref TASC counts, Wikipedia photos) into data.json and emit app/www/data.js."""
-import json,os,sys
+import json,os,sys,re
 S=os.environ.get('ASC_SCRATCH','/tmp/claude-0/-home-user-Android-Fable5p1-ASC2026-conference-breakdown/22e803a5-16ae-5ba4-91b7-cbd9a897b501/scratchpad')
 root=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 d=json.load(open(S+'/build/data.json'))
@@ -13,7 +13,14 @@ for p in d['people']:
     if k not in best or len(p['pres'])>len(best[k]['pres']): best[k]=p
 nt=nw=0
 for k,v in cx.items():
-    if k in best and v.get('n') is not None and v['n']>0: best[k]['tasc']={'n':v['n'],'recent':v.get('recent',[]),'capped':bool(v.get('capped'))}; nt+=1
+    if k in best and v.get('n') is not None and v['n']>0:
+        GK={'theta':'θ','varepsilon':'ε','epsilon':'ε','mu':'μ','alpha':'α','beta':'β','gamma':'γ','delta':'δ','lambda':'λ','sigma':'σ','omega':'ω','rho':'ρ','tau':'τ','phi':'φ','pi':'π','kappa':'κ','eta':'η','nu':'ν','chi':'χ','psi':'ψ','xi':'ξ'}
+        def detex(t):
+            t=re.sub(r'\\([A-Za-z]+)',lambda mm:GK.get(mm.group(1),mm.group(1)),t)
+            t=re.sub(r'_\{([^}]*)\}',r'\1',t); t=re.sub(r'\^\{([^}]*)\}',r'^\1',t)
+            return t.replace('$','').replace('{','').replace('}','')
+        rec=[{'t':detex(r['t']),'y':r['y'],'doi':r['doi']} for r in v.get('recent',[])]
+        best[k]['tasc']={'n':v['n'],'recent':rec,'capped':bool(v.get('capped'))}; nt+=1
 for k,v in wk.items():
     if k in best and v.get('found'):
         p=best[k]; p['wiki']={'title':v['title'],'url':v['url'],'extract':v.get('extract','')}

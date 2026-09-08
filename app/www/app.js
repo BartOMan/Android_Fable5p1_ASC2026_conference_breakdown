@@ -624,7 +624,7 @@ function initNetwork() {
     for (const l of links) { const a = nodes[l.a], b = nodes[l.b]; const hi = sel != null && (l.a === sel || l.b === sel); ctx.strokeStyle = hi ? 'rgba(255,209,102,.9)' : 'rgba(150,170,210,' + Math.min(0.5, 0.08 + l.w * 0.07) + ')'; ctx.lineWidth = (hi ? 2 : Math.min(4, l.w)) / scale; ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke(); }
     nodes.forEach((n, i) => { ctx.beginPath(); ctx.arc(n.x, n.y, n.r / Math.sqrt(scale), 0, Math.PI * 2); ctx.fillStyle = cols[n.area] || '#9aa7c0'; ctx.fill(); if (i === sel) { ctx.strokeStyle = '#ffd166'; ctx.lineWidth = 3 / scale; ctx.stroke(); } });
     ctx.font = `${11 / scale}px sans-serif`; ctx.fillStyle = '#e8edf7'; ctx.textAlign = 'center';
-    nodes.forEach((n, i) => { if (n.r > 9 || i === sel || scale > 1.6) ctx.fillText(n.pp.name.split(' ').pop(), n.x, n.y - n.r / Math.sqrt(scale) - 3 / scale); });
+    nodes.forEach((n, i) => { if (n.r > 11.5 || i === sel || scale > 1.6) ctx.fillText(n.pp.name.split(' ').pop(), n.x, n.y - n.r / Math.sqrt(scale) - 3 / scale); });
     ctx.restore();
   }
   draw();
@@ -743,6 +743,7 @@ window.exportICS = () => {
   Object.entries(plan.days).forEach(([d, items]) => items.forEach(it => { if (it.kind === 'session') add(it.s.id, d, it.start, it.end, it.s.id + ' ' + it.s.title, it.s.room + ' (Level ' + it.s.level + '), DLCC', it.talks.map(t => fmtT(t.p.start) + ' ' + t.p.title).join('\n')); else if (it.kind === 'posters') add('posters' + d + it.start, d, it.start, it.end, 'Poster walk: ' + it.posters.length + ' picks', 'Exhibit Hall BC (Level 2), DLCC', it.posters.map(t => '#' + (t.p.board || t.p.id) + ' ' + t.p.title).join('\n')); else add(it.p.id, d, it.start, it.end, it.p.id + ' ' + it.p.title, it.p.room + ', DLCC', it.p.session + ' ' + it.p.sess.title); }));
   const ics = `BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//ASC2026 Navigator//EN\r\nCALSCALE:GREGORIAN\r\n${ev.join('\r\n')}\r\nEND:VCALENDAR\r\n`;
   if (window.AndroidBridge && AndroidBridge.saveFile) { AndroidBridge.saveFile('ASC2026-plan.ics', ics); toast('Saved ASC2026-plan.ics to Downloads'); }
+  else if (window.claude && typeof claude.use === 'function') { claude.use('downloads').then(dl => { if (dl) return dl.save({ filename: 'ASC2026-plan.ics', data: ics }).then(() => toast('Calendar file saved')).catch(e => { if (!/cancel|declin/i.test(String(e && e.code))) toast('Could not save: ' + (e && e.message || e)); }); toast('Saving is not available in this viewer'); }); }
   else { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([ics], { type: 'text/calendar' })); a.download = 'ASC2026-plan.ics'; document.body.appendChild(a); a.click(); a.remove(); toast('Calendar file downloaded'); }
   window.__lastICS = ics;
 };
