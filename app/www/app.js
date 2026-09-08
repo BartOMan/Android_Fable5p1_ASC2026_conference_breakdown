@@ -199,7 +199,7 @@ function personCard(pp, extra) {
     <div class="grow">
       <div class="title">${esc(pp.name)} ${pp.plenary ? '<span class="badge pl">plenary</span>' : ''}</div>
       <div class="small muted">${esc(inst)}${c ? ' · ' + flag(c) + ' ' + esc(c) : ''}</div>
-      <div class="tiny muted">${pp.pres.length} presentation${pp.pres.length === 1 ? '' : 's'}${pp.presentingIds.length ? ' · presenting ' + pp.presentingIds.length : ''}${pp.chairs ? ' · chairs ' + pp.chairs.length : ''}${pp.tasc && pp.tasc.n ? ' · ≈' + pp.tasc.n + ' TASC papers' : ''}</div>
+      <div class="tiny muted">${pp.pres.length} presentation${pp.pres.length === 1 ? '' : 's'}${pp.presentingIds.length ? ' · presenting ' + pp.presentingIds.length : ''}${pp.chairs ? ' · chairs ' + pp.chairs.length : ''}${pp.tasc && pp.tasc.n ? ' · ' + (pp.tasc.capped ? '≥' : '≈') + pp.tasc.n + ' TASC papers' : ''}</div>
       ${extra || ''}
     </div></div>`;
 }
@@ -435,7 +435,7 @@ routes.person = seg => {
   if (pp.bio) html += `<div class="card"><h3>Biography</h3><div class="abs small">${esc(pp.bio)}</div></div>`;
   if (pp.wiki && pp.wiki.extract) html += `<div class="card"><h3>From Wikipedia</h3><div class="small">${esc(pp.wiki.extract)}</div><div class="tiny"><a href="${pp.wiki.url}" target="_blank" rel="noopener">${esc(pp.wiki.title)} — Wikipedia</a></div></div>`;
   if (pp.tasc) {
-    html += `<div class="card"><h3>IEEE Transactions on Applied Superconductivity</h3><div class="row"><div class="stat grow"><div class="n">≈${pp.tasc.n}</div><div class="l">papers matching this name (Crossref)</div></div></div>`;
+    html += `<div class="card"><h3>IEEE Transactions on Applied Superconductivity</h3><div class="row"><div class="stat grow"><div class="n">${pp.tasc.capped ? '≥' : '≈'}${pp.tasc.n}</div><div class="l">papers matching this name (Crossref${pp.tasc.capped ? ', first 400 hits' : ''})</div></div></div>`;
     if (pp.tasc.recent && pp.tasc.recent.length) html += `<div class="small muted" style="margin-top:8px">Recent:</div>` + pp.tasc.recent.map(r => `<div class="small" style="padding:4px 0;border-top:1px solid var(--line)"><a href="https://doi.org/${esc(r.doi)}" target="_blank" rel="noopener">${esc(r.t)}</a> <span class="muted">(${r.y || ''})</span></div>`).join('');
     html += `<div class="tiny muted" style="margin-top:6px">Name-based match; common names may include other authors.</div></div>`;
   }
