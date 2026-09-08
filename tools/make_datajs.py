@@ -22,7 +22,7 @@ for k,v in cx.items():
         rec=[{'t':detex(r['t']),'y':r['y'],'doi':r['doi']} for r in v.get('recent',[])]
         best[k]['tasc']={'n':v['n'],'recent':rec,'capped':bool(v.get('capped'))}; nt+=1
 for k,v in wk.items():
-    if k in best and v.get('found'):
+    if k in best and v.get('found') and not re.search(r'\(\d+[–-]\d+\)|statesman|ancient|century|BC\b|dynasty',(v.get('desc','')+' '+v.get('extract','')),re.I):
         p=best[k]; p['wiki']={'title':v['title'],'url':v['url'],'extract':v.get('extract','')}
         if v.get('photo') and not p.get('photo'): p['photo']=v['photo']; p['photoCredit']='Wikimedia Commons / Wikipedia'; p['photoUrl']=v['url']; nw+=1
 # drop heavy fields not needed by the app
