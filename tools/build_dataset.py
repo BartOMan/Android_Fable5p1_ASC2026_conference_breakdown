@@ -327,7 +327,7 @@ for b in blocks[1:]:
     if not stem: continue
     p,au=pl_match(PHOTO_LAST[stem[0]])
     names=[strip_tags(x) for x in re.findall(r'<strong>(.*?)</strong>',b[:4000])]
-    names=[x for x in names if ':' not in x and 2<=len(x.split())<=5]
+    names=[x for x in names if ':' not in x and 2<=len(x.split())<=5 and norm(PHOTO_LAST[stem[0]]).replace('sidiqqi','siddiqi') in norm(x)]
     name=names[0] if names else (au['n'] if au else stem[0])
     if name=='Irfan Siddiqi' and au: au['n']='Irfan Siddiqi'
     titles=[strip_tags(x) for x in re.findall(r'<em>(.*?)</em>',b[:3000])][:3]
@@ -352,7 +352,14 @@ for pl in plen:
         for au in p['authors']:
             if au['p'] and au.get('pid'): per=next((x for x in people if x['id']==au['pid']),None); break
     if not per: per=match_person(pl['name'])
-    if per: per['plenary']=True; per['bio']=pl['bio']; per['titles']=pl['titles']; per['photo']=pl['photo']; per['photoCredit']='appliedsuperconductivity.org'; pl['pid']=per['id']; pl['name']=per['name'] if len(per['name'])>len(pl['name']) else pl['name']
+    if per:
+        per['plenary']=True; per['bio']=pl['bio']; per['titles']=pl['titles']; per['photo']=pl['photo']; per['photoCredit']='appliedsuperconductivity.org'; pl['pid']=per['id']
+        # the conference website spelling is authoritative for plenary speakers (the planner has typos)
+        if len(pl['name'].split())>=2:
+            per['name']=pl['name']
+            for pid_ in per['pres']:
+                for au in pres[pid_]['authors']:
+                    if au.get('pid')==per['id']: au['n']=pl['name']
     else: print('plenary unmatched',pl['name'],file=sys.stderr)
 
 # ---------- Special sessions descriptions ----------
