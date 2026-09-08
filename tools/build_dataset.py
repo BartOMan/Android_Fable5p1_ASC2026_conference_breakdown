@@ -327,7 +327,7 @@ for b in blocks[1:]:
     if not stem: continue
     p,au=pl_match(PHOTO_LAST[stem[0]])
     names=[strip_tags(x) for x in re.findall(r'<strong>(.*?)</strong>',b[:4000])]
-    names=[x for x in names if ':' not in x and 2<=len(x.split())<=5]
+    names=[x for x in names if ':' not in x and 2<=len(x.split())<=5 and norm(PHOTO_LAST[stem[0]]).replace('sidiqqi','siddiqi') in norm(x)]
     name=names[0] if names else (au['n'] if au else stem[0])
     if name=='Irfan Siddiqi' and au: au['n']='Irfan Siddiqi'
     titles=[strip_tags(x) for x in re.findall(r'<em>(.*?)</em>',b[:3000])][:3]
