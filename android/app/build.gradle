@@ -1,0 +1,28 @@
+plugins { id 'com.android.application' }
+android {
+    namespace 'org.asc2026.navigator'
+    compileSdk 35
+    defaultConfig {
+        applicationId 'org.asc2026.navigator'
+        minSdk 26
+        targetSdk 35
+        versionCode 1
+        versionName '1.0'
+    }
+    signingConfigs {
+        release {
+            storeFile file('../keystore/asc2026.jks')
+            storePassword 'asc2026navigator'
+            keyAlias 'asc2026'
+            keyPassword 'asc2026navigator'
+        }
+    }
+    buildTypes {
+        release { minifyEnabled false; signingConfig signingConfigs.release }
+        debug { signingConfig signingConfigs.release }
+    }
+    compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
+    sourceSets { main { assets.srcDirs = ['../../app/www'] } }
+    androidResources { noCompress 'js' }
+}
+dependencies { }
